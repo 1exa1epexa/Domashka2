@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.homework2</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.Gravity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.MotionEvent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.ImageView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.LinearLayout</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.TextView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+
+    <span class="s2">// создание полей для вывода на экран нужных значений</span>
+    <span class="s0">private </span><span class="s1">TextView coordinatesOut</span><span class="s0">; </span><span class="s2">// окно вывода значений координат</span>
+    <span class="s0">private float </span><span class="s1">x</span><span class="s0">; </span><span class="s2">// задание поля для координаты X</span>
+    <span class="s0">private float </span><span class="s1">y</span><span class="s0">; </span><span class="s2">// задание поля для координаты Y</span>
+    <span class="s0">private </span><span class="s1">String sDown</span><span class="s0">; </span><span class="s2">// строка для записи координат нажатия</span>
+    <span class="s0">private </span><span class="s1">String sMove</span><span class="s0">; </span><span class="s2">// строка для записи координат движения</span>
+    <span class="s0">private </span><span class="s1">String sUp</span><span class="s0">; </span><span class="s2">// строка для записи координат отпускания</span>
+
+    <span class="s2">// задание дополнительных полей координат кота Шрёдингера</span>
+    <span class="s0">private final float </span><span class="s1">xCat = </span><span class="s3">500</span><span class="s0">; </span><span class="s2">// задание поля для координаты X</span>
+    <span class="s0">private final float </span><span class="s1">yCat = </span><span class="s3">500</span><span class="s0">; </span><span class="s2">// задание поля для координаты Y</span>
+    <span class="s0">private final float </span><span class="s1">deltaCat = </span><span class="s3">50</span><span class="s0">; </span><span class="s2">// допустимая погрешность в нахождении кота</span>
+
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_main)</span><span class="s0">;</span>
+
+        <span class="s2">// присваивание переменной активити элемента представления activity_main</span>
+        <span class="s1">coordinatesOut = findViewById(R.id.coordinatesOut)</span><span class="s0">;</span>
+
+        <span class="s2">// выполнение действий при касании экрана</span>
+        <span class="s1">coordinatesOut.setOnTouchListener(listener)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">// объект обработки касания экрана (слушатель)</span>
+    <span class="s0">private </span><span class="s1">View.OnTouchListener listener = </span><span class="s0">new </span><span class="s1">View.OnTouchListener() {</span>
+        <span class="s1">@Override</span>
+        <span class="s0">public boolean </span><span class="s1">onTouch(View view</span><span class="s0">, </span><span class="s1">MotionEvent motionEvent) { </span><span class="s2">// в motionEvent пишутся координаты</span>
+            <span class="s1">x = motionEvent.getX()</span><span class="s0">; </span><span class="s2">// инициализация координат X</span>
+            <span class="s1">y = motionEvent.getY()</span><span class="s0">; </span><span class="s2">// инициализация координат Y</span>
+
+            <span class="s0">switch </span><span class="s1">(motionEvent.getAction()) { </span><span class="s2">// метод getAction() считывает состояние касания (нажатие/движение/отпускание)</span>
+                <span class="s0">case </span><span class="s1">MotionEvent.ACTION_DOWN: </span><span class="s2">// нажатие</span>
+                    <span class="s1">sDown = </span><span class="s4">&quot;Нажатие: координата X = &quot; </span><span class="s1">+ x + </span><span class="s4">&quot;, координата y = &quot; </span><span class="s1">+ y</span><span class="s0">;</span>
+                    <span class="s1">sMove = </span><span class="s4">&quot;&quot;</span><span class="s0">;</span>
+                    <span class="s1">sUp = </span><span class="s4">&quot;&quot;</span><span class="s0">;</span>
+                    <span class="s0">break;</span>
+                <span class="s0">case </span><span class="s1">MotionEvent.ACTION_MOVE: </span><span class="s2">// движение</span>
+                    <span class="s1">sMove = </span><span class="s4">&quot;Движение: координата X = &quot; </span><span class="s1">+ x + </span><span class="s4">&quot;, координата y = &quot; </span><span class="s1">+ y</span><span class="s0">;</span>
+                    <span class="s2">// задание условия нахождения кота Шрёдингера</span>
+                    <span class="s0">if </span><span class="s1">(x &lt; (xCat + deltaCat) &amp;&amp; x &gt; (xCat - deltaCat) &amp;&amp; y &lt; (yCat + deltaCat) &amp;&amp; y &gt; (yCat - deltaCat)) { </span><span class="s2">// если пользователь коснулся места нахождения кота</span>
+                        <span class="s1">ImageView i = </span><span class="s0">new </span><span class="s1">ImageView(getApplicationContext())</span><span class="s0">;</span>
+                        <span class="s1">i.setImageResource(R.drawable.found_cat)</span><span class="s0">;</span>
+
+
+                        <span class="s1">Toast toast = </span><span class="s0">new </span><span class="s1">Toast(getApplicationContext())</span><span class="s0">;</span>
+                        <span class="s1">toast.setDuration(Toast.LENGTH_SHORT)</span><span class="s0">;</span>
+                        <span class="s1">toast.setView(i)</span><span class="s0">;</span>
+                        <span class="s1">toast.show()</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                    <span class="s0">break;</span>
+                <span class="s0">case </span><span class="s1">MotionEvent.ACTION_UP: </span><span class="s2">// отпускание</span>
+                <span class="s0">case </span><span class="s1">MotionEvent.ACTION_CANCEL: </span><span class="s2">// внутрений сбой (аналогичен ACTION_UP)</span>
+                    <span class="s1">sMove = </span><span class="s4">&quot;&quot;</span><span class="s0">;</span>
+                    <span class="s1">sUp = </span><span class="s4">&quot;Отпускание: координата X = &quot; </span><span class="s1">+ x + </span><span class="s4">&quot;, координата y = &quot; </span><span class="s1">+ y</span><span class="s0">;</span>
+                    <span class="s0">break;</span>
+            <span class="s1">}</span>
+
+            <span class="s2">// вывод на экран в три строки считанных значений координат</span>
+            <span class="s1">coordinatesOut.setText(sDown + </span><span class="s4">&quot;</span><span class="s0">\n</span><span class="s4">&quot; </span><span class="s1">+ sMove + </span><span class="s4">&quot;</span><span class="s0">\n</span><span class="s4">&quot; </span><span class="s1">+ sUp)</span><span class="s0">;</span>
+
+            <span class="s0">return true; </span><span class="s2">// подтверждение нашей обработки событий</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span><span class="s0">;</span>
+<span class="s1">}</span></pre>
+</body>
+</html>
